@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215481616180",
+    "project_id": "winch-ad72b",
+    "storage_bucket": "winch-ad72b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215481616180:android:3ae263a58abfc5b7108761",
+        "android_client_info": {
+          "package_name": "com.example.carwinch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaKpChBgwowvSS6l0UDdKPFKcYmaNmHX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
