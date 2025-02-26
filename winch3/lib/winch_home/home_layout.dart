@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 
 import 'acc_screen/account_screen.dart';
-import 'servicepage.dart';
+import 'service/car_service/servicepage.dart';
 import 'historypage.dart';
 import 'homepage.dart';
 
@@ -20,7 +20,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   List<Widget> screens = [
     Homepage(),
     ServicePage(),
-    Historypage(),
+    HistoryPage(),
     AccountScreen(email: ''),
   ];
 

@@ -3,19 +3,18 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter_api/google_places_flutter_api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
 
-import '../color_controller.dart';
-import '../maps/map_screen.dart';
+import 'color_controller.dart';
+import 'maps/map_screen.dart';
 
-class SelectAddressScreen extends StatefulWidget {
-  const SelectAddressScreen({super.key});
+class RoutePage extends StatefulWidget {
+  const RoutePage({super.key});
 
   @override
-  State<SelectAddressScreen> createState() => _RoutePageState();
+  State<RoutePage> createState() => _RoutePageState();
 }
 
-class _RoutePageState extends State<SelectAddressScreen> {
+class _RoutePageState extends State<RoutePage> {
   final TextEditingController fromController = TextEditingController();
   final TextEditingController toController = TextEditingController();
 
@@ -23,32 +22,18 @@ class _RoutePageState extends State<SelectAddressScreen> {
   final Set<Marker> _markers = {};
   LatLng? fromLatLng;
   LatLng? toLatLng;
-  String price = "0.00"; // Declare price variable
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+
+
+
 
   @override
   void dispose() {
     fromController.dispose();
     toController.dispose();
     super.dispose();
-  }
-
-  Future<void> _calculatePrice() async {
-    if (fromLatLng != null && toLatLng != null) {
-      double distanceInMeters = Geolocator.distanceBetween(
-        fromLatLng!.latitude, fromLatLng!.longitude,
-        toLatLng!.latitude, toLatLng!.longitude,
-      );
-
-      double distanceInKm = distanceInMeters / 1000;
-      double pricePerKm = 2.5; //  $2.5 per km
-      double totalPrice = distanceInKm * pricePerKm;
-
-      setState(() {
-        price = totalPrice.toStringAsFixed(2);
-      });
-    }
   }
 
   Future<void> _searchLocation({required bool isFromLocation}) async {
@@ -97,8 +82,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
     toLatLng = latLng;
     toController.text = description ?? "";
     _addMarker(latLng, "To: $description", "To");
-
-    _calculatePrice();
   }
 
   void _addMarker(LatLng position, String title, String markerId) {
@@ -125,7 +108,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
             'longitude': toLatLng!.longitude,
             'description': toController.text,
           },
-          'price': price,
           'timestamp': FieldValue.serverTimestamp(),
         });
         debugPrint("Locations saved to Firebase successfully!");
@@ -146,7 +128,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
           toLatLng: toLatLng,
           mapController: mapController,
           markers: _markers,
-          price:price ,
         ),
       ),
     );
@@ -184,11 +165,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
               controller: toController,
               label: 'Where To',
               onTap: () => _searchLocation(isFromLocation: false),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Estimated Price: \$$price',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],
         ),

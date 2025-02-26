@@ -1,7 +1,7 @@
+import 'package:carwinch/color_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../class_users/task.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -17,7 +17,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _secondNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _retypePasswordController = TextEditingController();
+  final TextEditingController _retypePasswordController =
+      TextEditingController();
   final TextEditingController _mobileNumberController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
@@ -29,11 +30,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _signUp() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        final credential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-
 
         final userData = {
           'firstName': _firstNameController.text.trim(),
@@ -47,7 +48,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (_userType == 'Winch') 'brand': _brandController.text.trim(),
           if (_userType == 'Winch') 'model': _modelController.text.trim(),
           if (_userType == 'Winch') 'brand': _carplateController.text.trim(),
-          if (_userType == 'Car Service') 'location': _locationController.text.trim(),
+          if (_userType == 'Car Service')
+            'location': _locationController.text.trim(),
         };
 
         await FirebaseFirestore.instance
@@ -59,11 +61,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'model': _modelController.text.trim(),
           'carPlate': _carplateController.text.trim(),
         });
-
-
         if (_userType == 'Winch') {
-          await FirebaseFirestore.instance.
-          collection('winch')
+          await FirebaseFirestore.instance
+              .collection('winch')
               .doc(credential.user!.uid)
               .set({
             ...(userData),
@@ -72,16 +72,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'carPlate': _carplateController.text.trim(),
           });
         } else if (_userType == 'Car Service') {
-          await FirebaseFirestore.instance.collection('car_service').doc(credential.user!.uid).set({
+          await FirebaseFirestore.instance
+              .collection('car_service')
+              .doc(credential.user!.uid)
+              .set({
             ...userData,
             'location': _locationController.text.trim(),
           });
         }
 
-
-
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign-Up Successful!'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Sign-Up Successful!'),
+              backgroundColor: Colors.green),
         );
 
         Navigator.of(context).pushReplacementNamed('/homescreen');
@@ -99,7 +102,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('An error occurred: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -109,12 +114,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF474737), Color(0xFF33A333)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+        decoration: BoxDecoration(
+          color: ColorController.primaryLiteMode,
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -130,7 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       style: TextStyle(
                         fontSize: 34,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: ColorController.primaryDarkMode,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -138,23 +139,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       'Create a new account to get started!',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white70,
+                        color: ColorController.primaryDarkMode,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 25),
                     _buildTextField(
                       controller: _firstNameController,
                       hint: 'First Name',
                       icon: Icons.person,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     _buildTextField(
                       controller: _secondNameController,
                       hint: 'Second Name',
                       icon: Icons.person_outline,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     _buildTextField(
                       controller: _emailController,
                       hint: 'Email',
@@ -163,13 +164,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                            .hasMatch(value)) {
                           return 'Enter a valid email';
                         }
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     _buildTextField(
                       controller: _passwordController,
                       hint: 'Password',
@@ -184,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     _buildTextField(
                       controller: _retypePasswordController,
                       hint: 'Re-type Password',
@@ -197,7 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     _buildTextField(
                       controller: _mobileNumberController,
                       hint: 'Mobile Number',
@@ -212,14 +214,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
                     DropdownButtonFormField<String>(
                       value: _userType,
                       decoration: _dropdownDecoration(),
                       items: const [
                         DropdownMenuItem(value: 'User', child: Text('User')),
                         DropdownMenuItem(value: 'Winch', child: Text('Winch')),
-                        DropdownMenuItem(value: 'Car Service', child: Text('Car Service')),
+                        DropdownMenuItem(
+                            value: 'Car Service', child: Text('Car Service')),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -228,40 +231,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     ),
                     if (_userType == 'User') ...[
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         controller: _brandController,
                         hint: 'Brand',
                         icon: Icons.car_repair,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         controller: _modelController,
                         hint: 'Model',
                         icon: Icons.directions_car,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         controller: _carplateController,
                         hint: 'Car Plate',
                         icon: Icons.numbers,
                       ),
                     ],
-
                     if (_userType == 'Winch') ...[
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       _buildTextField(
                         controller: _brandController,
                         hint: 'Brand',
                         icon: Icons.car_repair,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         controller: _modelController,
                         hint: 'Model',
                         icon: Icons.fire_truck,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         controller: _carplateController,
                         hint: 'Car Plate',
@@ -269,35 +271,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ],
                     if (_userType == 'Car Service') ...[
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       _buildTextField(
                         controller: _locationController,
                         hint: 'Service Location',
                         icon: Icons.location_on,
                       ),
                     ],
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _signUp,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
+                        backgroundColor: ColorController.primaryDarkMode,
+                        foregroundColor: ColorController.primaryLiteMode,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(32),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 80),
                       ),
                       child: const Text(
                         'Sign Up',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
                         );
                       },
                       child: const Text(
@@ -330,12 +335,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       validator: validator,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: ColorController.primaryLiteMode,
         hintText: hint,
-        prefixIcon: Icon(icon, color: Colors.black),
+        hintStyle: TextStyle(color: ColorController.primaryDarkMode),
+        prefixIcon: Icon(icon, color: ColorController.primaryDarkMode),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: ColorController.primaryDarkMode,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
       ),
@@ -345,10 +353,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   InputDecoration _dropdownDecoration() {
     return InputDecoration(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: ColorController.primaryLiteMode,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(32),
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(
+          color: ColorController.orange,
+          width: 2,
+        ),
       ),
     );
   }

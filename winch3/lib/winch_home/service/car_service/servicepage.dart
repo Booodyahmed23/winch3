@@ -1,7 +1,9 @@
 import 'package:carwinch/color_controller.dart';
+import 'package:carwinch/winch_home/service/winch_page/winch_service.dart';
 import 'package:flutter/material.dart';
 
-import 'home_layout.dart';
+import '../../home_layout.dart';
+import '../carservice_service.dart';
 
 class ServicePage extends StatelessWidget {
   const ServicePage({super.key});
@@ -56,7 +58,12 @@ class ServicePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const WinchService(),
+                      ),
+                    );
                   },
                   child: Container(
                     width: 175,
@@ -106,8 +113,14 @@ class ServicePage extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CarServiceService(),
+                      ),
+                    );
                   },
+
                   child: Container(
                     width: 175,
                     height: 125,
@@ -155,4 +168,5 @@ class ServicePage extends StatelessWidget {
       ),
     );
   }
+
 }

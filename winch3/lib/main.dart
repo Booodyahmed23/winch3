@@ -2,16 +2,23 @@ import 'package:carwinch/provider/provider.dart';
 import 'package:carwinch/select/select_address_screen.dart';
 import 'package:carwinch/test.dart';
 import 'package:carwinch/trash/home_screen.dart';
+import 'package:carwinch/winch_home/acc_screen/account_screen.dart';
 import 'package:carwinch/winch_home/acc_screen/edit_profile.dart';
 import 'package:carwinch/winch_home/home_layout.dart';
-import 'package:carwinch/winch_home/servicepage.dart';
+import 'package:carwinch/winch_home/service/car_service/servicepage.dart';
+import 'package:carwinch/winch_home/service/winch_page/pick_location_page.dart';
+import 'package:carwinch/winch_home/service/winch_page/request_winch_page.dart';
+import 'package:carwinch/winch_home/service/winch_page/winch_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:provider/provider.dart';
+import 'auth/resetpassword_screen.dart';
+import 'dd.dart';
 import 'maps/MapsView.dart';
+import 'maps/map_screen.dart';
 import 'users/carservices_screen.dart';
 import 'auth/homescreen.dart';
 import 'auth/login_screen.dart';
@@ -60,9 +67,9 @@ class _MyAppState extends State<MyApp> {
             theme: notifier.lightTheme,
             debugShowCheckedModeBanner: false,
             title: 'Car Winch App',
-             initialRoute: '/m',
+             initialRoute: '/l',
             routes: {
-              '/servicepage': (context) => ServicePage(),
+              // '/servicepage': (context) => ServicePage(),
               '/selectadd': (context) => SelectAddressScreen(),
               '/MessengerScreen': (context) => MessengerScreen(),
               '/hm': (context) => Homescreen(),
@@ -73,9 +80,19 @@ class _MyAppState extends State<MyApp> {
               '/signup': (context) => const SignUpScreen(),
               '/user': (context) => const UserScreen(),
               '/winch': (context) => const WinchScreen(),
+              '/WinchService': (context) => const WinchService(),
+              // '/RequestWinchPage': (context) => const RequestWinchPage(),
+              '/PickLocationPage': (context) => PickLocationPage(
+                onLocationPicked: (LatLng location) {
+                },
+              ),
               '/car_service': (context) => const CarServiceScreen(),
               '/HomeLayout': (context) => HomeLayout(),
               '/EditProfile': (context) => EditProfile(),
+              '/MapScreen': (context) => MapScreen(),
+              '/ResetPasswordScreen': (context) => ResetPasswordScreen(),
+              '/AccountScreen': (context) => AccountScreen(email: '',),
+              // '/RoutePage': (context) => RoutePage(),
             },
           );
         },

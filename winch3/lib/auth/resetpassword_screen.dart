@@ -1,46 +1,72 @@
+import 'package:carwinch/color_controller.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import '../winch_home/acc_screen/account_screen.dart';
+import 'login_screen.dart';
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
-
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
-
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  TextEditingController emailController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
+  final TextEditingController emailController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> resetPassword() async {
+    if (formKey.currentState!.validate()) {
+      try {
+        await _auth.sendPasswordResetEmail(email: emailController.text.trim());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Password reset email sent! Check your inbox.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight), // AppBar height
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF474737), Color(0xFF375C37)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+      appBar: AppBar(
+        backgroundColor: ColorController.primaryDarkMode,
+        elevation: 0,
+        title: const Text(
+          'Reset Password',
+          style: TextStyle(
+            color: ColorController.primaryLiteMode,
           ),
-          child: AppBar(
-            backgroundColor: Colors.transparent, // Set background to transparent
-            elevation: 0, // Remove shadow to let gradient show through
-            title: const Text('Reset Password'),
-          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back,
+              color: ColorController.primaryLiteMode),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AccountScreen(
+                        email: '',
+                      )),
+            );
+          },
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF474737), Color(0xFF33A333)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+        decoration: BoxDecoration(
+          color: ColorController.primaryLiteMode,
         ),
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -54,65 +80,75 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   'Reset Password',
                   style: TextStyle(
                     fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    color: ColorController.primaryDarkMode,
                   ),
                 ),
                 const SizedBox(height: 30),
-
-                // Email Input
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
                     return null;
                   },
                   decoration: InputDecoration(
                     hintText: 'Enter your email',
-                    prefixIcon: const Icon(
+                    prefixIcon: Icon(
                       Icons.email,
-                      color: Colors.black,
+                      color: ColorController.primaryDarkMode,
                     ),
-                    border: OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                    color: ColorController.primaryDarkMode,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: ColorController.primaryDarkMode,
+                        width: 3,  // Border width when focused
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: ColorController.primaryDarkMode,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.redAccent,  // Red border when error and focused
+                        width: 3,
+                      ),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     filled: true,
-                    fillColor: Colors.white.withOpacity(0.7),
+                    fillColor: ColorController.primaryLiteMode,  // Background color
                   ),
                 ),
+
                 const SizedBox(height: 30),
-
-                // Reset Button
                 ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      // Simulate password reset action
-                      SnackBar snackBar = const SnackBar(
-                        content: Text('Password reset instructions sent!'),
-                        backgroundColor: Colors.green,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                      // After showing the snackBar, navigate back to the login screen
-                      Navigator.pop(context);
-                    }
-                  },
+                  onPressed: resetPassword,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(width, height * 0.06),
+                    backgroundColor: ColorController.primaryDarkMode,
+                    foregroundColor: ColorController.primaryLiteMode,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                   child: const Text(
                     'Reset Password',
                     style: TextStyle(
-                      fontSize: 20, // Adjust font size for button text
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(width, height * 0.06),
-                    backgroundColor: Colors.white.withOpacity(0.7),
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),

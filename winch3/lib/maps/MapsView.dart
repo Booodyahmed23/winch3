@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../auth/login_screen.dart';
 import '../select/select_address_screen.dart';
-import 'package:carwinch/provider/provider.dart';  // Import your UiProvider class
+import 'package:carwinch/provider/provider.dart'; // Import your UiProvider class
 
 class MapsView extends StatefulWidget {
   MapsView({
@@ -30,7 +30,7 @@ class _MapsViewState extends State<MapsView> {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      key: scaffoldKey, // Assign the key to Scaffold
+      key: scaffoldKey,
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -84,14 +84,13 @@ class _MapsViewState extends State<MapsView> {
                 print('Logout tapped');
               },
             ),
-            // Switch to toggle light/dark theme
             Consumer<UiProvider>(
               builder: (context, uiProvider, child) {
                 return SwitchListTile(
                   title: Text('Dark Mode'),
                   value: uiProvider.isDark,
                   onChanged: (value) {
-                    uiProvider.changeTheme();  // Toggle theme
+                    uiProvider.changeTheme(); // Toggle theme
                   },
                   secondary: const Icon(Icons.dark_mode),
                 );
@@ -113,7 +112,7 @@ class _MapsViewState extends State<MapsView> {
             myLocationButtonEnabled: false,
             mapToolbarEnabled: false,
           ),
-          // Floating Action Button for Drawer
+
           Positioned(
             top: 40,
             left: 20,
@@ -124,7 +123,7 @@ class _MapsViewState extends State<MapsView> {
                 child: IconButton(
                   icon: const Icon(Icons.menu, size: 30, color: Colors.black),
                   onPressed: () {
-                    scaffoldKey.currentState!.openDrawer(); // Open the drawer
+                    scaffoldKey.currentState!.openDrawer();
                   },
                 ),
               ),
@@ -146,7 +145,8 @@ class _MapsViewState extends State<MapsView> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrange,
-                padding: const EdgeInsets.symmetric(horizontal: 150, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 150, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

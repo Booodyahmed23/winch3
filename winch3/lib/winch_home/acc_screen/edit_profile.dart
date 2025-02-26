@@ -176,7 +176,7 @@ class _EditProfileState extends State<EditProfile> {
                             onPressed: _saveProfile,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: ColorController.primaryDarkMode,
-                              foregroundColor: ColorController.orange,
+                              foregroundColor: ColorController.primaryDarkMode,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(32),
                               ),
@@ -222,7 +222,7 @@ class _EditProfileState extends State<EditProfile> {
         fillColor: ColorController.primaryLiteMode,
         hintText: hint,
         hintStyle: const TextStyle(
-          color: ColorController.orange,
+          color: ColorController.primaryDarkMode,
         ),
         prefixIcon: Icon(icon, color: ColorController.primaryDarkMode),
         border: OutlineInputBorder(

@@ -3,19 +3,19 @@ import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter_api/google_places_flutter_api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
 
-import '../color_controller.dart';
-import '../maps/map_screen.dart';
+import '../../../color_controller.dart';
+import '../../../maps/map_screen.dart';
 
-class SelectAddressScreen extends StatefulWidget {
-  const SelectAddressScreen({super.key});
+class PickLocationPage extends StatefulWidget {
+  const PickLocationPage(
+      {super.key, required Null Function(LatLng location) onLocationPicked});
 
   @override
-  State<SelectAddressScreen> createState() => _RoutePageState();
+  State<PickLocationPage> createState() => _RoutePageState();
 }
 
-class _RoutePageState extends State<SelectAddressScreen> {
+class _RoutePageState extends State<PickLocationPage> {
   final TextEditingController fromController = TextEditingController();
   final TextEditingController toController = TextEditingController();
 
@@ -23,7 +23,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
   final Set<Marker> _markers = {};
   LatLng? fromLatLng;
   LatLng? toLatLng;
-  String price = "0.00"; // Declare price variable
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -32,23 +31,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
     fromController.dispose();
     toController.dispose();
     super.dispose();
-  }
-
-  Future<void> _calculatePrice() async {
-    if (fromLatLng != null && toLatLng != null) {
-      double distanceInMeters = Geolocator.distanceBetween(
-        fromLatLng!.latitude, fromLatLng!.longitude,
-        toLatLng!.latitude, toLatLng!.longitude,
-      );
-
-      double distanceInKm = distanceInMeters / 1000;
-      double pricePerKm = 2.5; //  $2.5 per km
-      double totalPrice = distanceInKm * pricePerKm;
-
-      setState(() {
-        price = totalPrice.toStringAsFixed(2);
-      });
-    }
   }
 
   Future<void> _searchLocation({required bool isFromLocation}) async {
@@ -62,7 +44,7 @@ class _RoutePageState extends State<SelectAddressScreen> {
 
       if (places != null) {
         List<geocoding.Location> locations =
-        await geocoding.locationFromAddress(places.description ?? "");
+            await geocoding.locationFromAddress(places.description ?? "");
         if (locations.isNotEmpty) {
           geocoding.Location location = locations.first;
           LatLng latLng = LatLng(location.latitude, location.longitude);
@@ -72,8 +54,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
               _setFromLocation(latLng, places.description);
             } else {
               _setToLocation(latLng, places.description);
-              _saveToFirebase();
-              _navigateToMapScreen();
             }
           });
 
@@ -97,8 +77,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
     toLatLng = latLng;
     toController.text = description ?? "";
     _addMarker(latLng, "To: $description", "To");
-
-    _calculatePrice();
   }
 
   void _addMarker(LatLng position, String title, String markerId) {
@@ -125,7 +103,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
             'longitude': toLatLng!.longitude,
             'description': toController.text,
           },
-          'price': price,
           'timestamp': FieldValue.serverTimestamp(),
         });
         debugPrint("Locations saved to Firebase successfully!");
@@ -146,7 +123,6 @@ class _RoutePageState extends State<SelectAddressScreen> {
           toLatLng: toLatLng,
           mapController: mapController,
           markers: _markers,
-          price:price ,
         ),
       ),
     );
@@ -164,7 +140,8 @@ class _RoutePageState extends State<SelectAddressScreen> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: ColorController.primaryLiteMode),
+          icon: const Icon(Icons.arrow_back,
+              color: ColorController.primaryLiteMode),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -185,10 +162,40 @@ class _RoutePageState extends State<SelectAddressScreen> {
               label: 'Where To',
               onTap: () => _searchLocation(isFromLocation: false),
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Estimated Price: \$$price',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            SizedBox(
+              height: 16,
+            ),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Describe the issue',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorController.primaryDarkMode,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                _saveToFirebase();
+                _navigateToMapScreen();
+              },
+              child: const Text(
+                'Submit Request',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: ColorController.primaryLiteMode,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
@@ -210,13 +217,16 @@ class _RoutePageState extends State<SelectAddressScreen> {
       ),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(fontSize: 14, color: ColorController.primaryDarkMode),
-        prefixIcon: const Icon(Icons.location_on, color: ColorController.primaryDarkMode),
+        labelStyle: const TextStyle(
+            fontSize: 14, color: ColorController.primaryDarkMode),
+        prefixIcon: const Icon(Icons.location_on,
+            color: ColorController.primaryDarkMode),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: ColorController.primaryDarkMode, width: 1.5),
+          borderSide: const BorderSide(
+              color: ColorController.primaryDarkMode, width: 1.5),
           borderRadius: BorderRadius.circular(32.0),
         ),
         focusedBorder: OutlineInputBorder(

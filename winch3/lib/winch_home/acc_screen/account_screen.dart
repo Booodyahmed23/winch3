@@ -92,6 +92,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -112,8 +113,9 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: ColorController.primaryLiteMode),
-          onPressed: () {
+          icon: const Icon(Icons.arrow_back,
+    color: ColorController.primaryLiteMode),
+    onPressed: () {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -135,32 +137,30 @@ class _AccountScreenState extends State<AccountScreen> {
               children: [
                 Center(
                   child: GestureDetector(
-                    onTap: () {
-                      _showProfilePhoto(
-                        context,
-                        'assets/images/profile_photo.jpg',
-                      );
-                    },
-                    child:  Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black,
-                        border: Border.all(
-                          color: ColorController.primaryDarkMode,
-                          width: 3,  // Border width
+                      onTap: () {
+                        _showProfilePhoto(
+                          context,
+                          'assets/images/profile_photo.jpg',
+                        );
+                      },
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black,
+                          border: Border.all(
+                            color: ColorController.primaryDarkMode,
+                            width: 3, // Border width
+                          ),
                         ),
-                      ),
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          'https://st3.depositphotos.com/1432405/12536/v/950/depositphotos_125360840-stock-illustration-car-towing-truck-icon-outline.jpg',
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            'https://st3.depositphotos.com/1432405/12536/v/950/depositphotos_125360840-stock-illustration-car-towing-truck-icon-outline.jpg',
+                          ),
+                          radius: 60,
                         ),
-                        radius: 60,
-                      ),
-                    )
-
-                  ),
+                      )),
                 ),
                 const SizedBox(height: 20),
                 Center(
@@ -213,7 +213,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Historypage(),
+                        builder: (context) => const HistoryPage(),
                       ),
                     );
                   },
