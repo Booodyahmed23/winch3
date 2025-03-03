@@ -1,10 +1,9 @@
+import 'package:carwinch/color_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:carwinch/auth/resetpassword_screen.dart';
 import 'package:carwinch/auth/signup_screen.dart';
-import '../maps/MapsView.dart';
 import '../winch_home/acc_screen/account_screen.dart';
 import '../winch_home/home_layout.dart';
 
@@ -19,14 +18,13 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showPassword = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<void> loginUser() async {
     if (formKey.currentState!.validate()) {
       try {
-         Firebase Authentication;
         UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
@@ -42,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                AccountScreen(email: emailController.text.trim()), // Pass email
+                HomeLayout(),
           ),
         );
       } on FirebaseAuthException catch (e) {
@@ -67,18 +65,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(kDebugMode){
-      passwordController.text="123456";
-      emailController.text="sayed@gmail.com";
+    if (kDebugMode) {
+      passwordController.text = "123456";
+      emailController.text = "sayed@gmail.com";
     }
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF474737), Color(0xFF217A21)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: ColorController.primaryLiteMode,
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -93,17 +87,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text(
                       'Winch',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ColorController.primaryDarkMode,
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 20),
-                    const CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://st3.depositphotos.com/1432405/12536/v/950/depositphotos_125360840-stock-illustration-car-towing-truck-icon-outline.jpg',
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.black,
+                        border: Border.all(
+                          color: ColorController.primaryDarkMode,
+                          width: 3,
+                        ),
                       ),
-                      radius: 60,
+                      child: const CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          'https://st3.depositphotos.com/1432405/12536/v/950/depositphotos_125360840-stock-illustration-car-towing-truck-icon-outline.jpg',
+                        ),
+                        radius: 60,
+                      ),
                     ),
                     const SizedBox(height: 15),
                     const Text(
@@ -131,14 +137,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       decoration: InputDecoration(
                         hintText: 'Enter your email',
-                        prefixIcon:
-                            const Icon(Icons.email, color: Colors.black),
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          color: ColorController.primaryDarkMode,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(32),
+                          borderSide: BorderSide(
+                            color: ColorController.primaryDarkMode,
+                            width: 2.0,
+                          ),
                         ),
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.7),
+                        fillColor: ColorController.primaryLiteMode,
                       ),
                     ),
                     const SizedBox(height: 15),
@@ -158,7 +169,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       decoration: InputDecoration(
                         hintText: 'Enter your password',
-                        prefixIcon: const Icon(Icons.lock, color: Colors.black),
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          color: ColorController.primaryDarkMode,
+                        ),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -173,11 +187,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(32),
+                          borderSide: BorderSide(
+                            color: ColorController.primaryDarkMode,
+                            width: 2.0,
+                          ),
                         ),
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.7),
+                        fillColor: ColorController.primaryLiteMode,
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -193,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: ColorController.primaryDarkMode,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -205,12 +222,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: ElevatedButton(
                             onPressed: () async {
                               await loginUser();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeLayout(),
-                                ),
-                              );
                             },
                             child: const Text(
                               'Login',
@@ -220,8 +231,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white.withOpacity(0.7),
-                              foregroundColor: Colors.black,
+                              backgroundColor: ColorController.primaryDarkMode,
+                              foregroundColor: ColorController.primaryLiteMode,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -229,8 +240,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(width: 5),
-
-                        // Forgot Password Button
 
                         // Sign Up Button
                         Expanded(
@@ -251,8 +260,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white.withOpacity(0.7),
-                              foregroundColor: Colors.black,
+                              backgroundColor: ColorController.primaryDarkMode,
+                              foregroundColor: ColorController.primaryLiteMode,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),

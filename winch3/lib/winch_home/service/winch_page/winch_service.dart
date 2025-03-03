@@ -30,7 +30,7 @@ class WinchService extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 20,),
 
 
             Image.asset(
